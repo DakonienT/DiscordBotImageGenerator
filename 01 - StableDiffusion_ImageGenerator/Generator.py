@@ -37,4 +37,8 @@ async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
     channel = bot.get_channel(TEXT_CHANNEL_ID)
     await channel.send("Hello ! VirIGo Bot is ready.")
+    
+@bot.command()
+async def generateImage(ctx, prompt):
+    await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
 bot.run(token)
