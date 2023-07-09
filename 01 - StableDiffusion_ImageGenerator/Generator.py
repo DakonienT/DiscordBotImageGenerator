@@ -5,18 +5,17 @@ from diffusers import StableDiffusionPipeline
 
 HF_TOKEN="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"
 MODEL_ID = "CompVis/stable-diffusion-v1-4"
-DEVICE = "cuda"
+DEVICE = "cpu"
 
 #print("Creating generator with device " + DEVICE)
-#generator = torch.Generator(DEVICE)
+generator = torch.Generator(DEVICE)
 print("Calling pipe")
 pipe = StableDiffusionPipeline.from_pretrained(
-    MODEL_ID,revision="fp16", 
-    height = 512,
-    width = 512, 
+    MODEL_ID, 
     safety_checker = None,
-    num_inference_steps=15,
-    use_auth_token = HF_TOKEN)
+    guidance_scale=2,
+    generator=generator
+    )
 #pipe = pipe.to(DEVICE)
 pipe.enable_sequential_cpu_offload()
 
