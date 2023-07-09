@@ -1,7 +1,9 @@
 import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline
-
+import discord
+from discord.ext.commands.bot import Bot
+from discord.ext import commands
 
 HF_TOKEN="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"
 MODEL_ID = "CompVis/stable-diffusion-v1-4"
@@ -25,7 +27,7 @@ print("The prompt is : " + prompt)
 
 
 print("Getting image")
-image = pipe(prompt).images[0]
-image.save("test.png")
+#image = pipe(prompt).images[0]
+#image.save("test.png")
 
 print("Done.")
