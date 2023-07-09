@@ -7,7 +7,10 @@ from discord.ext import commands
 
 #Set discord client
 intents = discord.Intents.all()
-client = Bot(command_prefix='!', intents=intents)
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+token = open("token", "r").read()
+TEXT_CHANNEL_ID = 1068254639750922260
+print("Bot will use token " + token)
 
 MODEL_ID = "CompVis/stable-diffusion-v1-4" #Used for stable diffusion
 DEVICE = "cpu" #Set device on which to run stable diffusin
@@ -29,8 +32,9 @@ pipe.enable_sequential_cpu_offload()
 #image.save("test.png")
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-    
-client.run('MTEyNzcwNzU1NTAzNzE4NDExMA.GysFei.mS8FUEXMsQUOnNjjb74cYwfZAHQdxihLObuWiY')
+    print('We have logged in as {0.user}'.format(bot))
+    channel = bot.get_channel(TEXT_CHANNEL_ID)
+    await channel.send("Hello ! VirIGo Bot is ready.")
+bot.run(token)
