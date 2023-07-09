@@ -5,11 +5,15 @@ import discord
 from discord.ext.commands.bot import Bot
 from discord.ext import commands
 
-HF_TOKEN="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"
-MODEL_ID = "CompVis/stable-diffusion-v1-4"
-DEVICE = "cpu"
+#Set discord client
+intents = discord.Intents.all()
+client = Bot(command_prefix='!', intents=intents)
 
-#print("Creating generator with device " + DEVICE)
+MODEL_ID = "CompVis/stable-diffusion-v1-4" #Used for stable diffusion
+DEVICE = "cpu" #Set device on which to run stable diffusin
+
+#Stable diffusion pipeline setup
+print("Creating generator with device " + DEVICE)
 generator = torch.Generator(DEVICE)
 print("Calling pipe")
 pipe = StableDiffusionPipeline.from_pretrained(
@@ -21,13 +25,12 @@ pipe = StableDiffusionPipeline.from_pretrained(
 #pipe = pipe.to(DEVICE)
 pipe.enable_sequential_cpu_offload()
 
-prompt = "a photograph of an astronaut riding a horse"
-
-print("The prompt is : " + prompt)
-
-
-print("Getting image")
 #image = pipe(prompt).images[0]
 #image.save("test.png")
 
-print("Done.")
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+    
+client.run('MTEyNzcwNzU1NTAzNzE4NDExMA.GysFei.mS8FUEXMsQUOnNjjb74cYwfZAHQdxihLObuWiY')
