@@ -4,6 +4,7 @@ from diffusers import StableDiffusionPipeline
 import discord
 from discord.ext.commands.bot import Bot
 from discord.ext import commands
+import random
 
 #Set discord client
 intents = discord.Intents.all()
@@ -41,4 +42,7 @@ async def on_ready():
 @bot.command()
 async def generateImage(ctx, prompt):
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
+    image = pipe(prompt).images[0]
+    image_id = random.randint(0,9999999)
+    image.save(image_id + ".png")
 bot.run(token)
