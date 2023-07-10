@@ -5,11 +5,12 @@ import discord
 from discord.ext.commands.bot import Bot
 from discord.ext import commands
 import random
+import os
 
 #Set discord client
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-token = open("token", "r").read()
+token = os.getenv('DISCORD_TOKEN')
 TEXT_CHANNEL_ID = 1068254639750922260
 print("Bot will use token " + token)
 
