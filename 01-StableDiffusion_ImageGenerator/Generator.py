@@ -4,11 +4,13 @@ from diffusers import StableDiffusionPipeline
 import discord
 from discord.ext.commands.bot import Bot
 from discord.ext import commands
+import random
+import os
 
 #Set discord client
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
-token = open("token", "r").read()
+token = os.getenv('DISCORD_TOKEN')
 TEXT_CHANNEL_ID = 1068254639750922260
 print("Bot will use token " + token)
 
@@ -41,4 +43,7 @@ async def on_ready():
 @bot.command()
 async def generateImage(ctx, prompt):
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
+    image = pipe(prompt).images[0]
+    image_id = random.randint(0,9999999)
+    image.save(image_id + ".png")
 bot.run(token)
