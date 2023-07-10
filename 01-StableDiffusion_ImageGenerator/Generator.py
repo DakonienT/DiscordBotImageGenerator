@@ -27,8 +27,8 @@ pipe = StableDiffusionPipeline.from_pretrained(
     guidance_scale=2,
     generator=generator
     )
-#pipe = pipe.to(DEVICE)
-pipe.enable_sequential_cpu_offload()
+pipe = pipe.to(DEVICE)
+#pipe.enable_sequential_cpu_offload()
 
 #image = pipe(prompt).images[0]
 #image.save("test.png")
