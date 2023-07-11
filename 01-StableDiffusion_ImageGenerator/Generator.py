@@ -40,7 +40,7 @@ def GenerationThread(pipe_thread, prompt_thread, channel_image):
     image = pipe_thread(prompt_thread).images[0]
     image_id = random.randint(0,9999999)
     image.save(str(image_id) + ".png")
-    with open (str(image_id) + ".png", 'rb') as img:
+    with open ('/home/' + str(image_id) + ".png", 'rb') as img:
         picture = discord.File(img)
         channel_image.send(file=picture)
 
