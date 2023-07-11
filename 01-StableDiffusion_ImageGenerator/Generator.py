@@ -6,6 +6,8 @@ from discord.ext.commands.bot import Bot
 from discord.ext import commands
 import random
 import os
+import threading
+import time
 
 #Set discord client
 intents = discord.Intents.all()
@@ -33,6 +35,11 @@ pipe = pipe.to(DEVICE)
 #image = pipe(prompt).images[0]
 #image.save("test.png")
 
+def GenerationThread(pipe_thread, prompt_thread):
+    print("Starting generation thread")
+    image = pipe_thread(prompt_thread).images[0]
+    image_id = random.randint(0,9999999)
+    image.save(image_id + ".png")
 
 @bot.event
 async def on_ready():
@@ -43,7 +50,6 @@ async def on_ready():
 @bot.command()
 async def generateImage(ctx, prompt):
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
-    image = pipe(prompt).images[0]
-    image_id = random.randint(0,9999999)
-    image.save(image_id + ".png")
+    threading.Thread(target=GenerationThread, args=(pipe,prompt))
+
 bot.run(token)
