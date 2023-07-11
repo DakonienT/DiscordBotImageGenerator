@@ -50,6 +50,6 @@ async def on_ready():
 @bot.command()
 async def generateImage(ctx, prompt):
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
-    threading.Thread(target=GenerationThread, args=(pipe,prompt))
+    threading.Thread(target=GenerationThread, args=(pipe,prompt)).start()
 
 bot.run(token)
