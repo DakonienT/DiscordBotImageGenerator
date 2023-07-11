@@ -35,11 +35,14 @@ pipe = pipe.to(DEVICE)
 #image = pipe(prompt).images[0]
 #image.save("test.png")
 
-def GenerationThread(pipe_thread, prompt_thread):
+def GenerationThread(pipe_thread, prompt_thread, channel_image):
     print("Starting generation thread")
     image = pipe_thread(prompt_thread).images[0]
     image_id = random.randint(0,9999999)
-    image.save(image_id + ".png")
+    image.save(str(image_id) + ".png")
+    with open (str(image_id) + ".png", 'rb') as img:
+        picture = discord.File(img)
+        channel_image.send(file=picture)
 
 @bot.event
 async def on_ready():
@@ -50,6 +53,7 @@ async def on_ready():
 @bot.command()
 async def generateImage(ctx, prompt):
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
-    threading.Thread(target=GenerationThread, args=(pipe,prompt)).start()
+    channel = bot.get_channel(TEXT_CHANNEL_ID)
+    threading.Thread(target=GenerationThread, args=(pipe,prompt,channel)).start()
 
 bot.run(token)
