@@ -45,7 +45,7 @@ def between_async(pipe_thread, prompt_thread, channel_image):
     loop.close
     
 async def GenerationThread(pipe_thread, prompt_thread, channel_image):
-    logging.info("Startin GenerationThread for prompt " + prompt_thread)
+    logging.info("Starting GenerationThread for prompt " + prompt_thread)
     #image = pipe_thread(prompt_thread).images[0]
     image_id = random.randint(0,9999999)
     #image.save('/home/'+ str(image_id) + ".png")
