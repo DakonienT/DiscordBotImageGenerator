@@ -11,6 +11,8 @@ import time
 import logging
 from datetime import datetime
 import asyncio 
+import typing
+import functools
 
 #Set discord client
 intents = discord.Intents.all()
@@ -36,21 +38,16 @@ pipe = pipe.to(DEVICE)
 #pipe.enable_sequential_cpu_offload()
 
 
-def between_async(pipe_thread, prompt_thread, channel_image):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    loop.run_until_complete(generation_thread(pipe_thread, prompt_thread, channel_image))
-    loop.close()
+async def run_blocking(blocking_func: typing.Callable, *args, **kwargs) -> typing.Any:
+    func = functools.partial(blocking_func, *args, **kwargs)
+    return await bot.loop.run_in_executor(None, func)
+
+def generate(file_path, prompt, image_id,channel):
+    image = pipe(prompt).images[0]
     
-async def generation_thread(pipe_thread, prompt_thread, channel_image):
-    logging.info("Starting generation_thread for prompt " + prompt_thread)
-    image = pipe_thread(prompt_thread).images[0]
-    image_id = random.randint(0,9999999)
-    image.save( str(image_id) + ".png")
-    #with open ('/home/test.jpg', 'rb') as img:
-    with open ( str(image_id) + ".png", 'rb') as img:
-        picture = discord.File(img)
-        await channel_image.send(file=picture)
+    image.save(file_path)
+    logging.info("Image with ID " + str(image_id) + " has been saved in " + str(file_path))
+
 
 @bot.event
 async def on_ready():
@@ -58,17 +55,38 @@ async def on_ready():
     channel = bot.get_channel(TEXT_CHANNEL_ID)
     await channel.send("Hello ! VirIGo Bot is ready.")
     
+_loop = asyncio.get_event_loop()    
+
 @bot.command()
 async def generateimage(ctx, prompt):
-    logging.info(str(ctx.author.name) + " requested image generation with prompt : " + prompt)
+    image_id = random.randint(0,9999999)
+    logging.info(str(ctx.author.name) + " requested image generation with prompt : " + prompt + ". Image ID will be " + str(image_id))
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
     channel = bot.get_channel(TEXT_CHANNEL_ID)
-    threading.Thread(target=between_async, args=(pipe, prompt, channel)).start()
+    #threading.Thread(target=between_async, args=(pipe, prompt, channel)).start()
+    file_path = str(image_id) + ".png"
+    #asyncio.run_coroutine_threadsafe(generate(file_path, prompt,image_id, channel), _loop)
+    #await generate(file_path, prompt,image_id, channel)
+    r = await run_blocking(generate, file_path, prompt, image_id, channel)
+    print(r)
+    with open ( file_path, 'rb') as img:
+        picture = discord.File(img)
+        await channel.send(file=picture)
+
+    
+    
     
 if __name__ == '__main__':
+    mylogs = logging.getLogger(__name__)
+    mylogs.setLevel(logging.INFO)
     now = datetime.now()
     logName =  now.strftime("%d-%m-Y-%H-%M-%S") + ".log"
-    logging.basicConfig(filename=logName, encoding='utf-8',level=logging.DEBUG)
+    file = logging.FileHandler(logName)
+    mylogs.setLevel(logging.DEBUG)
+    fileformat = logging.Formatter("%(asctime)s:%(levelname)s:%(message)s",datefmt="%H:%M:%S")
+    file.setFormatter(fileformat)
+    mylogs.addHandler(file)
+    #logging.basicConfig(filename=logName, encoding='utf-8',level=logging.DEBUG)
     logging.info("LOG File name : " + logName)
     logging.info("Starting Bot")
     bot.run(token)
