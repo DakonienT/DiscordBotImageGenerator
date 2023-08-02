@@ -1,0 +1,6 @@
+projectKey=DiscordBotImageGenerator
+serverUrl=http://192.168.1.25:9000
+serverVersion=10.1.0.73491
+dashboardUrl=http://192.168.1.25:9000/dashboard?id=DiscordBotImageGenerator
+ceTaskId=AYm3loR7wlYmawtwrRlf
+ceTaskUrl=http://192.168.1.25:9000/api/ce/task?id=AYm3loR7wlYmawtwrRlf

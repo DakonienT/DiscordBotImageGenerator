@@ -35,22 +35,20 @@ pipe = StableDiffusionPipeline.from_pretrained(
 pipe = pipe.to(DEVICE)
 #pipe.enable_sequential_cpu_offload()
 
-#image = pipe(prompt).images[0]
-#image.save("test.png")
 
 def between_async(pipe_thread, prompt_thread, channel_image):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(GenerationThread(pipe_thread, prompt_thread, channel_image))
-    loop.close
+    loop.run_until_complete(generation_thread(pipe_thread, prompt_thread, channel_image))
+    loop.close()
     
-async def GenerationThread(pipe_thread, prompt_thread, channel_image):
-    logging.info("Starting GenerationThread for prompt " + prompt_thread)
-    #image = pipe_thread(prompt_thread).images[0]
+async def generation_thread(pipe_thread, prompt_thread, channel_image):
+    logging.info("Starting generation_thread for prompt " + prompt_thread)
+    image = pipe_thread(prompt_thread).images[0]
     image_id = random.randint(0,9999999)
-    #image.save('/home/'+ str(image_id) + ".png")
-    with open ('/home/test.jpg', 'rb') as img:
-    #with open ('/home/' + str(image_id) + ".png", 'rb') as img:
+    image.save( str(image_id) + ".png")
+    #with open ('/home/test.jpg', 'rb') as img:
+    with open ( str(image_id) + ".png", 'rb') as img:
         picture = discord.File(img)
         await channel_image.send(file=picture)
 
@@ -61,7 +59,7 @@ async def on_ready():
     await channel.send("Hello ! VirIGo Bot is ready.")
     
 @bot.command()
-async def generateImage(ctx, prompt):
+async def generateimage(ctx, prompt):
     logging.info(str(ctx.author.name) + " requested image generation with prompt : " + prompt)
     await ctx.send("I will generate an image for " + ctx.author.mention + " with prompt : " + prompt)
     channel = bot.get_channel(TEXT_CHANNEL_ID)
@@ -69,7 +67,7 @@ async def generateImage(ctx, prompt):
     
 if __name__ == '__main__':
     now = datetime.now()
-    logName = "/home/" + now.strftime("%d-%m-Y-%H-%M-%S") + ".log"
+    logName =  now.strftime("%d-%m-Y-%H-%M-%S") + ".log"
     logging.basicConfig(filename=logName, encoding='utf-8',level=logging.DEBUG)
     logging.info("LOG File name : " + logName)
     logging.info("Starting Bot")
