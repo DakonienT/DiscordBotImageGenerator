@@ -162,3 +162,5 @@ test.png
 token
 token
 token
+02-VirtualEnvironment/bin/transformers-cli
+*.png
