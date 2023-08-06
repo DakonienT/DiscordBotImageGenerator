@@ -164,3 +164,4 @@ token
 token
 02-VirtualEnvironment/bin/transformers-cli
 *.png
+.vscode/settings.json
