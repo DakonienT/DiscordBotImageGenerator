@@ -1,6 +1,6 @@
 {
     "sonarlint.connectedMode.project": {
-        "connectionId": "http-192-168-1-25-9000",
+        "connectionId": "http-192-168-1-25-9000-",
         "projectKey": "DiscordBotImageGenerator"
     }
 }
